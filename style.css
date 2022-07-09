@@ -1,0 +1,45 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+.container {
+    position: relative;
+    width: 60%;
+    margin: 10px auto;
+}
+
+.player {
+    display: flex;
+    justify-content: space-between;
+}
+
+.locker {
+    height: 75px;
+    width: 80px;
+    font-size: 30px;
+    background-color: rgb(255, 210, 98);
+}
+
+table {
+    height: 80vh;
+    width: 60vw;
+    margin: auto;
+}
+
+td {
+    height: 12.5%;
+    width: 12.5%;
+    border: 2px solid black;
+    background-color: rgb(111, 255, 118);
+    visibility: hidden;
+}
+.right-cells, .left-cells, .bottom-cells, .top-cells, #roll, #roll-value{
+    padding: 5px;
+    font-weight: 800;
+    font-size: 18px;
+    visibility: visible;
+}
+#roll{cursor: pointer;}
+#roll-value{text-align: center;}
