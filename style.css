@@ -21,6 +21,11 @@
     font-size: 30px;
     background-color: rgb(255, 210, 98);
 }
+#turn{
+    font-size: 35px;
+    font-family: monospace;
+    font-weight: 900;
+}
 
 table {
     height: 80vh;
