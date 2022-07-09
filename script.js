@@ -1,6 +1,9 @@
-let redsTurn = false;
+let redsTurn = true;
 let moveMade = true;
 let steps = 0;
+let turn = document.getElementById("turn");
+turn.innerText = "RED's TURN";
+
 // ---------------------------LOGIC FOR DICE AND ROLLING-------------------------
 
 let roll_value = document.getElementById("roll-value");
@@ -12,11 +15,14 @@ function rollTheDice() {
         isRolling = true;
         roll_value.innerText = "Rolling ...";
         setTimeout(() => {
-            roll_value.innerText = Math.floor((Math.random() * 100) % 6 + 1);
+            roll_value.innerText = Math.floor((Math.random() * 100) % 3 + 4);
             steps = parseInt(roll_value.innerText);
             isRolling = false;
             moveMade = false;
-            redsTurn = !redsTurn;
+            if (steps != 6) redsTurn = !redsTurn;
+
+            if (redsTurn) turn.innerText = "RED's TURN";
+            else turn.innerText = "BLUE's TURN";
         }, 600);
     }
     else { console.log("Rolling in progress. DON'T CLICK!"); }
@@ -45,11 +51,13 @@ let PlayerA = [
         token: document.createElement("div"),
         location: 0,
         canMove: false,
+        hasWon: false
     },
     {
         token: document.createElement("div"),
         location: 0,
         canMove: false,
+        hasWon: false
     }
 ]
 
@@ -58,11 +66,13 @@ let PlayerB = [
         token: document.createElement("div"),
         location: 0,
         canMove: false,
+        hasWon: false
     },
     {
         token: document.createElement("div"),
         location: 0,
         canMove: false,
+        hasWon: false
     }
 ]
 
@@ -70,48 +80,60 @@ let Players = [PlayerA, PlayerB];
 
 Players.forEach(i => {
     i.forEach(element => {
+        // if (i === PlayerA && element.location > 28) { element.hasWon = true; element.token.remove(); }
+        // else if (i === PlayerB && element.location > 43) { element.hasWon = true; element.token.remove(); }
+
 
         element.token.addEventListener('click', function () {
-            if ((i === PlayerA && redsTurn) || (i === PlayerB && !redsTurn) && !moveMade) 
-            {
+            if ((i === PlayerA && redsTurn) || (i === PlayerB && !redsTurn) && !moveMade) {
                 if (steps === 6 && !element.canMove) {
-                    element.canMove = true; 
-                    if(i === PlayerA) element.location = 1; 
+                    element.canMove = true;
+                    if (i === PlayerA) element.location = 1;
                     else element.location = 15;
-                    element.token.remove(); 
-                    document.getElementById(element.location).appendChild(element.token) 
+                    element.token.remove();
+                    document.getElementById(element.location).appendChild(element.token);
                 }
                 else if (element.canMove) {
+
                     element.location += steps;
                     element.token.remove();
-                    document.getElementById(`${element.location % 28}`).appendChild(element.token);
+                    if (i === PlayerA) {
+                        if (element.location <= 28) {
+                            document.getElementById(`${element.location}`).appendChild(element.token);
+                        }
+                        else element.hasWon = true;
+                    }
+                    if (i === PlayerB) {
+                        if (element.location <= 42) {
+                            document.getElementById(`${element.location % 28 + 1}`).appendChild(element.token);
+                        }
+                        else element.hasWon = true;
+                    }
                 }
+
+
                 if (i === PlayerA) {
-                    if(element.location % 28 == PlayerB[0].location % 28) 
-                    {
+                    if (element.location % 28 == PlayerB[0].location % 28) {
                         PlayerB[0].token.remove();
                         PlayerB[0].location = 15;
                         PlayerB[0].canMove = false;
                         locker2.appendChild(PlayerB[0].token);
                     }
-                    if(element.location % 28 == PlayerB[1].location % 28) 
-                    {
+                    if (element.location % 28 == PlayerB[1].location % 28) {
                         PlayerB[1].token.remove();
                         PlayerB[1].location = 15;
                         PlayerB[1].canMove = false;
                         locker2.appendChild(PlayerB[1].token);
                     }
                 }
-                if (i === PlayerB) {
-                    if(element.location % 28 == PlayerA[0].location % 28) 
-                    {
+                else if (i === PlayerB) {
+                    if (element.location % 28 == PlayerA[0].location % 28) {
                         PlayerA[0].token.remove();
                         PlayerA[0].location = 0;
                         PlayerA[0].canMove = false;
                         locker1.appendChild(PlayerA[0].token);
                     }
-                    if(element.location % 28 == PlayerA[1].location % 28) 
-                    {
+                    if (element.location % 28 == PlayerA[1].location % 28) {
                         PlayerA[1].token.remove();
                         PlayerA[1].location = 0;
                         PlayerA[1].canMove = false;
@@ -119,10 +141,10 @@ Players.forEach(i => {
                     }
                 }
                 moveMade = true;
-                
-            }
-        })
 
+            }
+            steps = 0;
+        })
 
         Object.assign(element.token.style, tokenStyle);
         locker1.appendChild(element.token);
